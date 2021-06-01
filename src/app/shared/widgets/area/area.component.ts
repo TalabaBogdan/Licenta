@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import * as Highcharts from 'highcharts';
 import HC_exporting from 'highcharts/modules/exporting';
+import { CryptoModel } from 'src/app/services/crypto.model';
+import { CryptoService } from 'src/app/services/crypto.service';
 
 
 @Component({
@@ -10,19 +12,26 @@ import HC_exporting from 'highcharts/modules/exporting';
 })
 export class AreaComponent implements OnInit {
 
-  constructor() { }
+  data : any = [];
+
+  constructor(private crypto : CryptoService) {
+    
+   }
 
   chartOptions = {};
 
   Highcharts = Highcharts;
 
   ngOnInit(): void {
+
+    this.crypto.getObservable().subscribe((response : CryptoModel[]) => console.log(response))
+
     this.chartOptions = {
       chart: {
           type: 'area'
       },
       title: {
-          text: 'Random data'
+          text: 'Cryptocurrency value'
       },
       subtitle: {
           text: 'Source: '
@@ -38,19 +47,19 @@ export class AreaComponent implements OnInit {
         enabled: true,
       },
       series: [{
-          name: 'Data1',
+          name: 'BTC',
           data: [502, 635, 705, 707, 902, 1300, 1567]
       }, {
-          name: 'Data2',
+          name: 'ETH',
           data: [106, 107, 111, 133, 221, 767, 1320]
       }, {
-          name: 'Data3',
+          name: 'XLM',
           data: [163, 203, 276, 408, 547, 729, 628]
       }, {
-          name: 'Data4',
+          name: 'MKR',
           data: [18, 31, 54, 156, 339, 818, 1201]
       }, {
-          name: 'Data5',
+          name: 'DOGE',
           data: [2, 2, 2, 6, 13, 30, 46]
       }]
   };
