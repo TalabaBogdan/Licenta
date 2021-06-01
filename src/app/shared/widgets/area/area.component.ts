@@ -14,6 +14,14 @@ export class AreaComponent implements OnInit {
 
   data : any = [];
 
+  name1 : String =  '';
+  name2 : String =  '';
+  name3 : String =  '';
+  name4 : String =  '';
+  name5 : String =  '';
+
+  update : boolean = false;
+
   constructor(private crypto : CryptoService) {
     
    }
@@ -24,9 +32,13 @@ export class AreaComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.crypto.getObservable().subscribe((response : CryptoModel[]) => console.log(response))
+    this.crypto.getObservable().subscribe((response : any) => {
+      this.name1 = response.data[0].name;
+      this.update = true;
+    })
 
     this.chartOptions = {
+      
       chart: {
           type: 'area'
       },
@@ -34,11 +46,11 @@ export class AreaComponent implements OnInit {
           text: 'Cryptocurrency value'
       },
       subtitle: {
-          text: 'Source: '
+          text: 'Source: CoinMarketCap.com'
       },
       tooltip: {
           split: true,
-          valueSuffix: ' millions'
+          valueSuffix: ' USD'
       },
       credits:{
         enabled: false,
@@ -47,19 +59,19 @@ export class AreaComponent implements OnInit {
         enabled: true,
       },
       series: [{
-          name: 'BTC',
+          name: this.name1,
           data: [502, 635, 705, 707, 902, 1300, 1567]
       }, {
-          name: 'ETH',
+          name: this.name2,
           data: [106, 107, 111, 133, 221, 767, 1320]
       }, {
-          name: 'XLM',
+          name: this.name3,
           data: [163, 203, 276, 408, 547, 729, 628]
       }, {
-          name: 'MKR',
+          name: this.name4,
           data: [18, 31, 54, 156, 339, 818, 1201]
       }, {
-          name: 'DOGE',
+          name: this.name5,
           data: [2, 2, 2, 6, 13, 30, 46]
       }]
   };
