@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
-import * as Highcharts from 'highcharts';
-import HC_exporting from 'highcharts/modules/exporting';
+import { CryptoService } from 'src/app/services/crypto.service';
+import {Color, Label, SingleDataSet} from 'ng2-charts';
+import { ChartOptions, ChartType } from 'chart.js';
 
 @Component({
   selector: 'app-widget-card3',
@@ -10,83 +11,35 @@ import HC_exporting from 'highcharts/modules/exporting';
 export class Card3Component implements OnInit {
 
 
-  Highcharts = Highcharts;
-  chartOptions = {};
+    data: any = [];
 
-
-  constructor() { }
-
+    constructor(private crypto: CryptoService) { }
+  
+    public polarAreaChartOptions: ChartOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        title: {
+            text: 'Circulating supply(billions)',
+            display: true
+        }
+      };
+    public polarAreaChartLabels: Label[] = [];
+    public polarAreaChartData: SingleDataSet = [];
+    public polarAreaLegend = true;
+  
+    public polarAreaChartType: ChartType = 'polarArea';
+  
   ngOnInit(): void {
 
-    this.chartOptions = {
-      
+    this.crypto.getObservable().subscribe((response: any) => {
+        console.log(response.data);
 
-      chart: {
-        type: 'spline',
-        inverted: true
-    },
-    title: {
-        text: 'Atmosphere Temperature by Altitude'
-    },
-    subtitle: {
-        text: 'According to the Standard Atmosphere Model'
-    },
-    xAxis: {
-        reversed: false,
-        title: {
-            enabled: true,
-            text: 'Altitude'
-        },
-        labels: {
-            format: '{value} km'
-        },
-        accessibility: {
-            rangeDescription: 'Range: 0 to 80 km.'
-        },
-        maxPadding: 0.05,
-        showLastLabel: true
-    },
-    yAxis: {
-        title: {
-            text: 'Temperature'
-        },
-        labels: {
-            format: '{value}°'
-        },
-        accessibility: {
-            rangeDescription: 'Range: -90°C to 20°C.'
-        },
-        lineWidth: 2
-    },
-    legend: {
-        enabled: false
-    },
-    tooltip: {
-        headerFormat: '<b>{series.name}</b><br/>',
-        pointFormat: '{point.x} km: {point.y}°C'
-    },
-    plotOptions: {
-        spline: {
-            marker: {
-                enable: false
-            }
+        for(let i=0;i<5;i++){
+        this.polarAreaChartData.push(response.data[i].circulating_supply/1000000000);
+        this.polarAreaChartLabels.push(response.data[i].symbol);
         }
-    },
-    series: [{
-        name: 'Temperature',
-        data: [[0, 15], [10, -50], [20, -56.5], [30, -46.5], [40, -22.1],
-            [50, -2.5], [60, -27.7], [70, -55.7], [80, -76.5]]
-    }]
 
-  }
-
-  HC_exporting(Highcharts);
-
-  setTimeout(()=>{
-    window.dispatchEvent(
-      new Event('resize')
-    );
-  },300)
+      });
 
   }
 }

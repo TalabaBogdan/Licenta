@@ -17,6 +17,7 @@ import { CardComponent } from './widgets/card/card.component';
 import { Card2Component } from './widgets/card2/card2.component';
 import { Card3Component } from './widgets/card3/card3.component';
 import { Card4Component } from './widgets/card4/card4.component';
+import {ChartsModule} from 'ng2-charts';
 
 @NgModule({
   declarations: [
@@ -29,18 +30,19 @@ import { Card4Component } from './widgets/card4/card4.component';
     Card3Component,
     Card4Component
   ],
-  imports: [
-    CommonModule,
-    MatDividerModule,
-    MatToolbarModule,
-    MatIconModule,
-    MatButtonModule,
-    FlexLayoutModule,
-    MatMenuModule,
-    MatListModule,
-    RouterModule,
-    HighchartsChartModule
-  ],
+    imports: [
+        CommonModule,
+        MatDividerModule,
+        MatToolbarModule,
+        MatIconModule,
+        MatButtonModule,
+        FlexLayoutModule,
+        MatMenuModule,
+        MatListModule,
+        RouterModule,
+        HighchartsChartModule,
+        ChartsModule
+    ],
   exports: [
     HeaderComponent,
     FooterComponent,

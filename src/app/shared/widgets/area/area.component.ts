@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import * as Highcharts from 'highcharts';
 import HC_exporting from 'highcharts/modules/exporting';
-import { CryptoModel } from 'src/app/services/crypto.model';
-import { CryptoService } from 'src/app/services/crypto.service';
+import {CryptoModel} from 'src/app/services/crypto.model';
+import {CryptoService} from 'src/app/services/crypto.service';
+import {ChartDataSets, ChartOptions, ChartType} from 'chart.js';
+import {Color, Label} from 'ng2-charts';
 
 
 @Component({
@@ -12,78 +14,108 @@ import { CryptoService } from 'src/app/services/crypto.service';
 })
 export class AreaComponent implements OnInit {
 
-  data : any = [];
+  data: any = [];
 
-  name1 : String =  '';
-  name2 : String =  '';
-  name3 : String =  '';
-  name4 : String =  '';
-  name5 : String =  '';
+  constructor(private crypto: CryptoService) {
 
-  update : boolean = false;
+  }
 
-  constructor(private crypto : CryptoService) {
-    
-   }
+  data1: number[] = [];
+  data2: number[] = [];
+  data3: number[] = [];
+  data4: number[] = [];
+  data5: number[] = [];
+  current: number = 0;
 
-  chartOptions = {};
+  lineChartData: ChartDataSets[] = [];
 
-  Highcharts = Highcharts;
+  lineChartLabels: Label[] = ['90d', '60d', '30d', '7d', '24h', '1h', 'current'];
+
+  lineChartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    title: {
+      text: 'Price evolution over time',
+      display: true
+    }
+  };
+
+  
+
+  lineChartColors: Color[] = [
+    {
+      borderColor: 'black',
+      backgroundColor: 'rgba(255,255,0,0.28)',
+    },
+  ];
+
+  lineChartLegend = true;
+  lineChartPlugins = [];
+  lineChartType: ChartType = 'line';
 
   ngOnInit(): void {
 
-    this.crypto.getObservable().subscribe((response : any) => {
-      this.name1 = response.data[0].name;
-      this.update = true;
-    })
+    this.crypto.getObservable().subscribe((response: any) => {
+      console.log(response.data);
 
-    this.chartOptions = {
-      
-      chart: {
-          type: 'area'
-      },
-      title: {
-          text: 'Cryptocurrency value'
-      },
-      subtitle: {
-          text: 'Source: CoinMarketCap.com'
-      },
-      tooltip: {
-          split: true,
-          valueSuffix: ' USD'
-      },
-      credits:{
-        enabled: false,
-      },
-      exporting: {
-        enabled: true,
-      },
-      series: [{
-          name: this.name1,
-          data: [502, 635, 705, 707, 902, 1300, 1567]
-      }, {
-          name: this.name2,
-          data: [106, 107, 111, 133, 221, 767, 1320]
-      }, {
-          name: this.name3,
-          data: [163, 203, 276, 408, 547, 729, 628]
-      }, {
-          name: this.name4,
-          data: [18, 31, 54, 156, 339, 818, 1201]
-      }, {
-          name: this.name5,
-          data: [2, 2, 2, 6, 13, 30, 46]
-      }]
-  };
+      //1st ranked coin
+      this.current = response.data[0].quote.USD.price;
+      this.data1.push(response.data[0].quote.USD.price);
+      this.data1.unshift(this.current * (100 - response.data[0].quote.USD.percent_change_1h)/100);
+      this.data1.unshift(this.current * (100 - response.data[0].quote.USD.percent_change_24h)/100);
+      this.data1.unshift(this.current * (100 - response.data[0].quote.USD.percent_change_7d)/100);
+      this.data1.unshift(this.current * (100 - response.data[0].quote.USD.percent_change_30d)/100);
+      this.data1.unshift(this.current * (100 - response.data[0].quote.USD.percent_change_60d)/100);
+      this.data1.unshift(this.current * (100 - response.data[0].quote.USD.percent_change_90d)/100);
 
-  HC_exporting(Highcharts);
+      //2nd ranked coind
+      this.current = response.data[1].quote.USD.price;
+      this.data2.push(response.data[1].quote.USD.price);
+      this.data2.unshift(this.current * (100 - response.data[1].quote.USD.percent_change_1h)/100);
+      this.data2.unshift(this.current * (100 - response.data[1].quote.USD.percent_change_24h)/100);
+      this.data2.unshift(this.current * (100 - response.data[1].quote.USD.percent_change_7d)/100);
+      this.data2.unshift(this.current * (100 - response.data[1].quote.USD.percent_change_30d)/100);
+      this.data2.unshift(this.current * (100 - response.data[1].quote.USD.percent_change_60d)/100);
+      this.data2.unshift(this.current * (100 - response.data[1].quote.USD.percent_change_90d)/100);
 
-  setTimeout(()=>{
-    window.dispatchEvent(
-      new Event('resize')
-    );
-  },300)
+      //3rd ranked coin
+      this.current = response.data[2].quote.USD.price;
+      this.data3.push(response.data[2].quote.USD.price);
+      this.data3.unshift(this.current * (100 - response.data[2].quote.USD.percent_change_1h)/100);
+      this.data3.unshift(this.current * (100 - response.data[2].quote.USD.percent_change_24h)/100);
+      this.data3.unshift(this.current * (100 - response.data[2].quote.USD.percent_change_7d)/100);
+      this.data3.unshift(this.current * (100 - response.data[2].quote.USD.percent_change_30d)/100);
+      this.data3.unshift(this.current * (100 - response.data[2].quote.USD.percent_change_60d)/100);
+      this.data3.unshift(this.current * (100 - response.data[2].quote.USD.percent_change_90d)/100);
 
+      //4th ranked coin
+      this.current = response.data[3].quote.USD.price;
+      this.data4.push(response.data[3].quote.USD.price);
+      this.data4.unshift(this.current * (100 - response.data[3].quote.USD.percent_change_1h)/100);
+      this.data4.unshift(this.current * (100 - response.data[3].quote.USD.percent_change_24h)/100);
+      this.data4.unshift(this.current * (100 - response.data[3].quote.USD.percent_change_7d)/100);
+      this.data4.unshift(this.current * (100 - response.data[3].quote.USD.percent_change_30d)/100);
+      this.data4.unshift(this.current * (100 - response.data[3].quote.USD.percent_change_60d)/100);
+      this.data4.unshift(this.current * (100 - response.data[3].quote.USD.percent_change_90d)/100);
+
+      //5th ranked coin
+      this.current = response.data[4].quote.USD.price;
+      this.data5.push(response.data[4].quote.USD.price);
+      this.data5.unshift(this.current * (100 - response.data[4].quote.USD.percent_change_1h)/100);
+      this.data5.unshift(this.current * (100 - response.data[4].quote.USD.percent_change_24h)/100);
+      this.data5.unshift(this.current * (100 - response.data[4].quote.USD.percent_change_7d)/100);
+      this.data5.unshift(this.current * (100 - response.data[4].quote.USD.percent_change_30d)/100);
+      this.data5.unshift(this.current * (100 - response.data[4].quote.USD.percent_change_60d)/100);
+      this.data5.unshift(this.current * (100 - response.data[4].quote.USD.percent_change_90d)/100);
+
+      this.lineChartData = [
+        {data: this.data1, label: response.data[0].symbol},
+        {data: this.data2, label: response.data[1].symbol},
+        {data: this.data3, label: response.data[2].symbol},
+        {data: this.data4, label: response.data[3].symbol},
+        {data: this.data5, label: response.data[4].symbol}
+      ];
+    });
   }
 
 }

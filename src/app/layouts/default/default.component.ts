@@ -16,7 +16,6 @@ export class DefaultComponent implements OnInit {
 
   sideBarToggler($event: any) {
     this.sideBarOpen = !this.sideBarOpen;
-    console.log("w.e");
   }
 
 }
